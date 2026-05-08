@@ -1033,6 +1033,22 @@
     margin-bottom: 6px;
     margin-top: 4px;
   }
+  .debt-split-row {
+    display: flex;
+    gap: 10px;
+  }
+  .debt-split-col { flex: 1; min-width: 0; }
+  .debt-split-col .modal-input { margin-bottom: 4px; }
+  .debt-split-hint {
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+    margin-bottom: 14px;
+    text-align: center;
+  }
+  .debt-split-hint.warn { color: var(--red); }
+  .debt-split-hint.ok { color: var(--green); }
 </style>
 </head>
 <body>
@@ -1191,12 +1207,21 @@
     <label class="modal-label">ชื่อลูกหนี้ / โน้ต</label>
     <input type="text" class="modal-input" id="debtNameInput" placeholder="เช่น พี่นก, โต๊ะ 3" maxlength="40" autocomplete="off">
 
-    <label class="modal-label">ยอดค้าง (บาท)</label>
-    <input type="number" class="modal-input" id="debtAmountInput" inputmode="decimal" step="0.01" min="0">
+    <div class="debt-split-row">
+      <div class="debt-split-col">
+        <label class="modal-label">ลูกค้าจ่ายมา</label>
+        <input type="number" class="modal-input" id="debtPaidInput" inputmode="decimal" step="0.01" min="0" placeholder="0">
+      </div>
+      <div class="debt-split-col">
+        <label class="modal-label">ค้างไว้</label>
+        <input type="number" class="modal-input" id="debtAmountInput" inputmode="decimal" step="0.01" min="0">
+      </div>
+    </div>
+    <div class="debt-split-hint" id="debtSplitHint">// ใส่อันใดอันหนึ่ง อีกช่องคำนวณให้</div>
 
     <div class="modal-actions">
       <button class="modal-btn cancel" data-debt-action="cancel">ยกเลิก</button>
-      <button class="modal-btn ok" data-debt-action="ok">บันทึกหนี้</button>
+      <button class="modal-btn ok" data-debt-action="ok">บันทึก</button>
     </div>
   </div>
 </div>
@@ -1417,7 +1442,7 @@
           s + (typeof it === 'number' ? 1 : it.qty), 0);
         card.innerHTML = `
           <div class="bill-head">
-            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}${b.debtName ? ` · <span style="color:var(--pink)">เก็บหนี้ ${escapeHtml(b.debtName)}</span>` : ''}</span>
+            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}${b.debtName ? ` · <span style="color:var(--pink)">เก็บหนี้ ${escapeHtml(b.debtName)}</span>` : ''}${b.debtPartial ? ` · <span style="color:var(--pink)">จ่ายบางส่วน · ${escapeHtml(b.debtPartial.name)} ค้าง ${fmt(b.debtPartial.owed)}</span>` : ''}</span>
             <span class="bill-total">${fmt(b.total)}</span>
           </div>
           <div class="bill-meta">
@@ -1502,9 +1527,49 @@
     const t = total();
     $('debtModalSub').textContent = `บิลรวม ${fmt(t)}`;
     $('debtNameInput').value = '';
+    // default: ลูกค้ายังไม่จ่ายอะไร = ค้างทั้งบิล
+    $('debtPaidInput').value = '';
     $('debtAmountInput').value = t.toFixed(2).replace(/\.00$/, '');
+    updateDebtHint();
     $('debtModal').classList.add('show');
     setTimeout(() => $('debtNameInput').focus(), 50);
+  }
+
+  // sync logic: เปลี่ยนช่องไหน อีกช่องคำนวณตาม
+  function onDebtPaidChange() {
+    const t = total();
+    const paid = parseFloat($('debtPaidInput').value);
+    if (!isNaN(paid)) {
+      const remaining = Math.max(0, t - paid);
+      $('debtAmountInput').value = remaining.toFixed(2).replace(/\.00$/, '');
+    }
+    updateDebtHint();
+  }
+  function onDebtAmountChange() {
+    const t = total();
+    const owe = parseFloat($('debtAmountInput').value);
+    if (!isNaN(owe)) {
+      const paid = Math.max(0, t - owe);
+      $('debtPaidInput').value = paid > 0 ? paid.toFixed(2).replace(/\.00$/, '') : '';
+    }
+    updateDebtHint();
+  }
+  function updateDebtHint() {
+    const hint = $('debtSplitHint');
+    const t = total();
+    const paid = parseFloat($('debtPaidInput').value) || 0;
+    const owe = parseFloat($('debtAmountInput').value) || 0;
+    const sum = paid + owe;
+    if (paid === 0 && owe === 0) {
+      hint.className = 'debt-split-hint';
+      hint.textContent = `// บิลรวม ${fmt(t)}`;
+    } else if (Math.abs(sum - t) < 0.01) {
+      hint.className = 'debt-split-hint ok';
+      hint.textContent = `✓ จ่าย ${fmt(paid)} + ค้าง ${fmt(owe)} = ${fmt(t)}`;
+    } else {
+      hint.className = 'debt-split-hint warn';
+      hint.textContent = `! รวม ${fmt(sum)} ไม่ตรงกับบิล ${fmt(t)}`;
+    }
   }
 
   function closeDebtModal() {
@@ -1513,16 +1578,38 @@
 
   function saveDebt() {
     const name = $('debtNameInput').value.trim();
-    const amount = parseFloat($('debtAmountInput').value);
-    if (!name) { toast('! ใส่ชื่อลูกหนี้'); return; }
-    if (!amount || amount <= 0) { toast('! ใส่ยอดค้าง'); return; }
+    const paid = parseFloat($('debtPaidInput').value) || 0;
+    const owe = parseFloat($('debtAmountInput').value);
+    const t = total();
 
+    if (!name) { toast('! ใส่ชื่อลูกหนี้'); return; }
+    if (!owe || owe <= 0) { toast('! ใส่ยอดค้าง'); return; }
+    if (paid < 0) { toast('! ยอดจ่ายไม่ถูกต้อง'); return; }
+    if (paid + owe > t + 0.01) { toast('! ยอดจ่าย+ค้าง เกินบิลรวม'); return; }
+
+    // ถ้ามียอดที่จ่ายมาแล้ว → บันทึกเป็นบิลใน history (รับเงินส่วนหนึ่งแล้ว)
+    if (paid > 0) {
+      const partialBill = {
+        time: new Date().toISOString(),
+        items: [...currentItems],
+        total: paid,
+        paid: paid,
+        billOriginal: t,
+        debtPartial: { name: name, owed: owe }
+      };
+      history.push(partialBill);
+      pruneOldHistory();
+      saveHistory();
+    }
+
+    // บันทึกลูกหนี้
     const debt = {
       id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
       name: name,
       items: [...currentItems],
-      total: amount,
-      billTotal: total(),
+      total: owe,
+      billTotal: t,
+      paidAtBill: paid,
       time: new Date().toISOString()
     };
     debts.push(debt);
@@ -1530,7 +1617,13 @@
     closeDebtModal();
     resetBill();
     renderDebts();
-    toast(`✓ บันทึกหนี้ ${name} ${fmt(amount)}`);
+    renderHistory();
+
+    if (paid > 0) {
+      toast(`✓ รับ ${fmt(paid)} · ค้าง ${fmt(owe)} (${name})`, 2500);
+    } else {
+      toast(`✓ ${name} ค้าง ${fmt(owe)}`);
+    }
   }
 
   function collectDebt(id) {
@@ -1916,6 +2009,10 @@
   });
   $('holdBillBtn').addEventListener('click', holdBill);
   $('debtBillBtn').addEventListener('click', openDebtModal);
+
+  // sync 2 ช่องในโมดัล
+  $('debtPaidInput').addEventListener('input', onDebtPaidChange);
+  $('debtAmountInput').addEventListener('input', onDebtAmountChange);
 
   // debt modal actions
   $('debtModal').addEventListener('click', e => {
