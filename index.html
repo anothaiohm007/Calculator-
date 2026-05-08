@@ -328,9 +328,9 @@
     to { transform: scaleX(0); }
   }
   .exact-btn {
-    flex: 1;
+    width: 100%;
     margin-top: 0;
-    padding: 13px;
+    padding: 14px;
     background: linear-gradient(135deg, var(--green), #a7f3d0);
     color: #064e3b;
     border: none;
@@ -346,58 +346,43 @@
     overflow: hidden;
   }
   .action-row {
-    display: flex;
-    gap: 8px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
     margin-top: 10px;
   }
-  .clear-btn {
-    padding: 13px 16px;
+  .action-row-primary {
+    margin-top: 6px;
+  }
+  .clear-btn,
+  .hold-btn,
+  .debt-btn,
+  .pickup-btn {
+    width: 100%;
+    padding: 11px 4px;
     background: transparent;
-    color: var(--red);
-    border: 1px solid var(--red);
-    border-radius: 10px;
+    border-radius: 9px;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.2px;
     cursor: pointer;
     transition: all 0.15s;
-    flex-shrink: 0;
+    border-width: 1px;
+    border-style: solid;
+    text-align: center;
+    line-height: 1.2;
+    white-space: nowrap;
   }
-  .clear-btn:active {
-    background: var(--red);
-    color: #000;
-    transform: scale(0.97);
-  }
-  .clear-btn:disabled {
+  .clear-btn { color: var(--red); border-color: var(--red); }
+  .clear-btn:active { background: var(--red); color: #000; transform: scale(0.97); }
+  .clear-btn:disabled, .hold-btn:disabled, .debt-btn:disabled, .pickup-btn:disabled {
     color: var(--text-faint);
     border-color: var(--line);
     cursor: not-allowed;
   }
-  .hold-btn {
-    padding: 13px 14px;
-    background: transparent;
-    color: var(--amber);
-    border: 1px solid var(--amber);
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
-  .hold-btn:active {
-    background: var(--amber);
-    color: #000;
-    transform: scale(0.97);
-  }
-  .hold-btn:disabled {
-    color: var(--text-faint);
-    border-color: var(--line);
-    cursor: not-allowed;
-  }
+  .hold-btn { color: var(--amber); border-color: var(--amber); }
+  .hold-btn:active { background: var(--amber); color: #000; transform: scale(0.97); }
 
   /* ===== PARKED BILLS BAR ===== */
   .parked-bar {
@@ -866,29 +851,11 @@
   .modal-btn.ok:active { background: var(--text-soft); }
 
   /* ===== DEBT BUTTON ===== */
-  .debt-btn {
-    padding: 13px 14px;
-    background: transparent;
-    color: var(--pink);
-    border: 1px solid var(--pink);
-    border-radius: 10px;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.5px;
-    cursor: pointer;
-    transition: all 0.15s;
-    flex-shrink: 0;
-  }
+  .debt-btn { color: var(--pink); border-color: var(--pink); }
   .debt-btn:active {
     background: var(--pink);
     color: #000;
     transform: scale(0.97);
-  }
-  .debt-btn:disabled {
-    color: var(--text-faint);
-    border-color: var(--line);
-    cursor: not-allowed;
   }
 
   /* ===== TAB BADGE ===== */
@@ -1049,6 +1016,215 @@
   }
   .debt-split-hint.warn { color: var(--red); }
   .debt-split-hint.ok { color: var(--green); }
+
+  /* ===== PICKUP (ของรอรับ) ===== */
+  @keyframes pickupPulse {
+    0%, 100% { box-shadow: 0 0 0 0 var(--blue-glow); }
+    50% { box-shadow: 0 0 0 6px transparent; }
+  }
+  .pickup-alert {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(147,197,253,0.15), rgba(147,197,253,0.05));
+    border-bottom: 1px solid var(--blue);
+    border-top: 1px solid var(--line);
+    cursor: pointer;
+    animation: pickupPulse 2.5s ease-in-out infinite;
+  }
+  .pickup-alert.active { display: flex; }
+  .pickup-alert-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--blue);
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .pickup-alert-text {
+    flex: 1;
+    min-width: 0;
+  }
+  .pickup-alert-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--blue);
+    letter-spacing: 0.3px;
+  }
+  .pickup-alert-sub {
+    font-size: 11px;
+    color: var(--text-soft);
+    margin-top: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .pickup-alert-arrow {
+    color: var(--blue);
+    font-size: 16px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .pickup-btn { color: var(--blue); border-color: var(--blue); }
+  .pickup-btn:active {
+    background: var(--blue);
+    color: #000;
+    transform: scale(0.97);
+  }
+
+  .tab-badge.blue { background: var(--blue); }
+  .tab.active .tab-badge.blue { background: #000; color: var(--blue); }
+
+  .pickup-view {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+    display: none;
+  }
+  .pickup-view.active { display: block; }
+  .pickup-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--blue);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .pickup-summary-total {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--blue);
+  }
+  .pickup-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-faint);
+  }
+  .pickup-card {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blue);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--bg-card);
+    border-radius: 10px;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .pickup-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .pickup-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+    flex: 1;
+    min-width: 0;
+    word-break: break-word;
+  }
+  .pickup-bill-total {
+    font-size: 13px;
+    color: var(--text-faint);
+    font-weight: 600;
+    flex-shrink: 0;
+    margin-left: 8px;
+  }
+  .pickup-meta {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 8px;
+    letter-spacing: 0.3px;
+  }
+  .pickup-age-warn { color: var(--amber); }
+  .pickup-items {
+    background: var(--bg);
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 10px;
+    font-size: 12px;
+    color: var(--text-soft);
+    line-height: 1.6;
+  }
+  .pickup-note {
+    background: rgba(147,197,253,0.08);
+    border-left: 2px solid var(--blue);
+    padding: 8px 10px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 10px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .pickup-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .pickup-action {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .pickup-action.deliver {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .pickup-action.deliver:active {
+    background: var(--green);
+    color: #000;
+    transform: scale(0.97);
+  }
+  .pickup-action.del {
+    border-color: var(--red);
+    color: var(--red);
+    flex: 0 0 auto;
+    padding: 10px 14px;
+  }
+  .pickup-action.del:active {
+    background: var(--red);
+    color: #000;
+    transform: scale(0.97);
+  }
+
+  .modal-input:focus.blue-focus { border-color: var(--blue); }
+  .modal-textarea {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 14px;
+    margin-bottom: 10px;
+    outline: none;
+    resize: vertical;
+    min-height: 70px;
+    line-height: 1.5;
+  }
+  .modal-textarea:focus { border-color: var(--blue); }
 </style>
 </head>
 <body>
@@ -1061,10 +1237,21 @@
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="register">คิดเงิน</button>
+      <button class="tab" data-tab="pickups">รอรับ<span class="tab-badge blue" id="pickupBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="debts">ลูกหนี้<span class="tab-badge" id="debtBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="history">ประวัติ</button>
     </div>
   </header>
+
+  <!-- แถบเตือนของรอรับ — เด่นๆ บนหน้าหลัก -->
+  <div class="pickup-alert" id="pickupAlert">
+    <div class="pickup-alert-icon">⚠</div>
+    <div class="pickup-alert-text">
+      <div class="pickup-alert-title" id="pickupAlertTitle">มีของค้างไว้ให้ลูกค้า</div>
+      <div class="pickup-alert-sub" id="pickupAlertSub"></div>
+    </div>
+    <div class="pickup-alert-arrow">›</div>
+  </div>
 
   <!-- ============ REGISTER ============ -->
   <div class="receipt-wrap" id="registerView" style="display:flex;flex-direction:column;flex:1;overflow:hidden">
@@ -1110,9 +1297,12 @@
         <div class="countdown-fill" id="countdownFill"></div>
       </div>
       <div class="action-row">
-        <button class="clear-btn" id="clearBillBtn">เคลียร์บิล</button>
-        <button class="hold-btn" id="holdBillBtn">พักบิล</button>
-        <button class="debt-btn" id="debtBillBtn">ค้างไว้</button>
+        <button class="clear-btn" id="clearBillBtn">เคลียร์</button>
+        <button class="hold-btn" id="holdBillBtn">พัก</button>
+        <button class="debt-btn" id="debtBillBtn">ค้างจ่าย</button>
+        <button class="pickup-btn" id="pickupBillBtn">ค้างของ</button>
+      </div>
+      <div class="action-row-primary">
         <button class="exact-btn" id="exactBtn">จ่ายพอดี · จบบิล</button>
       </div>
     </div>
@@ -1144,6 +1334,16 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ============ PICKUPS (ของรอรับ) ============ -->
+  <div class="pickup-view" id="pickupView">
+    <div class="pickup-summary" id="pickupSummary" style="display:none">
+      <span>ของค้าง <strong id="pickupCount">0</strong> บิล</span>
+      <span class="pickup-summary-total" id="pickupSumTotal">0 ชิ้น</span>
+    </div>
+    <div class="history-note">// แตะ "ส่งของแล้ว" เมื่อลูกค้ามารับ</div>
+    <div id="pickupList"></div>
   </div>
 
   <!-- ============ DEBTS ============ -->
@@ -1226,6 +1426,25 @@
   </div>
 </div>
 
+<!-- Modal บันทึกของรอรับ -->
+<div class="modal" id="pickupModal">
+  <div class="modal-card">
+    <div class="modal-title">ค้างของไว้ให้ลูกค้า</div>
+    <div class="modal-sub" id="pickupModalSub">ลูกค้าจ่ายเงินครบแล้ว แต่ลืมหยิบของ</div>
+
+    <label class="modal-label">ชื่อลูกค้า / ป้ายเตือน</label>
+    <input type="text" class="modal-input" id="pickupNameInput" placeholder="เช่น ใส่เสื้อแดง, พี่นก โต๊ะ 2" maxlength="40" autocomplete="off">
+
+    <label class="modal-label">โน้ตเตือนตัวเอง (จะซ่อนของไว้ที่ไหน, อะไรลืม ฯลฯ)</label>
+    <textarea class="modal-textarea" id="pickupNoteInput" placeholder="เช่น ของอยู่หลังตู้, ลืม 2 ขวด" maxlength="200"></textarea>
+
+    <div class="modal-actions">
+      <button class="modal-btn cancel" data-pickup-action="cancel">ยกเลิก</button>
+      <button class="modal-btn ok" data-pickup-action="ok">บันทึก</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ========== STATE ==========
   let currentItems = [];     // [{price, qty}]
@@ -1237,11 +1456,13 @@
   let quickValues = [20, 50, 100, 500, 1000];  // ปุ่มลัด แก้ได้
   let parkedBills = [];      // [{id, name, items, time}]
   let debts = [];            // [{id, name, items, total, time}]
+  let pickups = [];          // [{id, name, note, items, total, time}]
   const STORAGE_KEY = 'pos:bills';
   const QUICK_KEY = 'pos:quick';
   const CURRENT_KEY = 'pos:current';
   const PARKED_KEY = 'pos:parked';
   const DEBT_KEY = 'pos:debts';
+  const PICKUP_KEY = 'pos:pickups';
 
   // ========== HELPERS ==========
   const $ = id => document.getElementById(id);
@@ -1342,6 +1563,17 @@
       localStorage.setItem(DEBT_KEY, JSON.stringify(debts));
     } catch (e) { console.error('save debts failed', e); }
   }
+  function loadPickups() {
+    try {
+      const raw = localStorage.getItem(PICKUP_KEY);
+      pickups = raw ? JSON.parse(raw) : [];
+    } catch (e) { pickups = []; }
+  }
+  function savePickups() {
+    try {
+      localStorage.setItem(PICKUP_KEY, JSON.stringify(pickups));
+    } catch (e) { console.error('save pickups failed', e); }
+  }
 
   // ========== RENDER ==========
   let lastTotal = 0;
@@ -1389,6 +1621,7 @@
     $('clearBillBtn').disabled = currentItems.length === 0;
     $('holdBillBtn').disabled = currentItems.length === 0;
     $('debtBillBtn').disabled = currentItems.length === 0;
+    $('pickupBillBtn').disabled = currentItems.length === 0;
 
     // payment area
     if (mode === 'pay' && paidValue !== null) {
@@ -1442,7 +1675,7 @@
           s + (typeof it === 'number' ? 1 : it.qty), 0);
         card.innerHTML = `
           <div class="bill-head">
-            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}${b.debtName ? ` · <span style="color:var(--pink)">เก็บหนี้ ${escapeHtml(b.debtName)}</span>` : ''}${b.debtPartial ? ` · <span style="color:var(--pink)">จ่ายบางส่วน · ${escapeHtml(b.debtPartial.name)} ค้าง ${fmt(b.debtPartial.owed)}</span>` : ''}</span>
+            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}${b.debtName ? ` · <span style="color:var(--pink)">เก็บหนี้ ${escapeHtml(b.debtName)}</span>` : ''}${b.debtPartial ? ` · <span style="color:var(--pink)">จ่ายบางส่วน · ${escapeHtml(b.debtPartial.name)} ค้าง ${fmt(b.debtPartial.owed)}</span>` : ''}${b.pickupName ? ` · <span style="color:var(--blue)">ค้างของ · ${escapeHtml(b.pickupName)}</span>` : ''}</span>
             <span class="bill-total">${fmt(b.total)}</span>
           </div>
           <div class="bill-meta">
@@ -1660,6 +1893,253 @@
     saveDebts();
     renderDebts();
     toast('✓ ลบแล้ว');
+  }
+
+  // ========== PICKUPS (ของรอรับ) ==========
+  function renderPickupAlert() {
+    const alert = $('pickupAlert');
+    if (pickups.length === 0) {
+      alert.classList.remove('active');
+      return;
+    }
+    alert.classList.add('active');
+    const titleEl = $('pickupAlertTitle');
+    const subEl = $('pickupAlertSub');
+    if (pickups.length === 1) {
+      const p = pickups[0];
+      titleEl.textContent = `มีของค้างไว้ให้ ${p.name}`;
+      const days = dayDiff(p.time);
+      const ageText = days === 0 ? 'วันนี้' : days === 1 ? 'เมื่อวาน' : `${days} วันแล้ว`;
+      subEl.textContent = `${ageText} · แตะเพื่อดูรายละเอียด`;
+    } else {
+      titleEl.textContent = `มีของค้างไว้ ${pickups.length} ราย`;
+      const names = pickups.slice(0, 3).map(p => p.name).join(', ');
+      subEl.textContent = pickups.length > 3 ? `${names}... แตะเพื่อดู` : `${names} · แตะเพื่อดู`;
+    }
+  }
+
+  function renderPickups() {
+    // tab badge
+    const badge = $('pickupBadge');
+    if (pickups.length > 0) {
+      badge.style.display = 'inline-block';
+      badge.textContent = pickups.length;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    renderPickupAlert();
+
+    const list = $('pickupList');
+    const summary = $('pickupSummary');
+    list.innerHTML = '';
+
+    if (pickups.length === 0) {
+      summary.style.display = 'none';
+      list.innerHTML = '<div class="pickup-empty"><div style="font-size:14px;color:var(--blue);margin-bottom:8px">// ของรอรับ</div>ยังไม่มีของค้าง<br><span style="font-size:11px">เวลาคิดตังครบแล้วลูกค้าลืมหยิบของ<br>กด "ค้างของ" เพื่อบันทึกไว้เตือน</span></div>';
+      return;
+    }
+
+    const totalItems = pickups.reduce((s, p) => s + p.items.reduce((ss, x) => ss + x.qty, 0), 0);
+    summary.style.display = 'flex';
+    $('pickupCount').textContent = pickups.length;
+    $('pickupSumTotal').textContent = `${totalItems} ชิ้น`;
+
+    [...pickups].reverse().forEach(p => {
+      const days = dayDiff(p.time);
+      const dt = new Date(p.time);
+      const ageText = days === 0 ? 'วันนี้' : days === 1 ? 'เมื่อวาน' : `${days} วันแล้ว`;
+      const ageClass = days >= 2 ? 'pickup-age-warn' : '';
+      const itemsSummary = p.items.map(it =>
+        it.qty > 1 ? `${it.qty}×${fmt(it.price)}` : fmt(it.price)
+      ).join(' · ');
+      const totalCount = p.items.reduce((s, x) => s + x.qty, 0);
+
+      const card = document.createElement('div');
+      card.className = 'pickup-card';
+      card.innerHTML = `
+        <div class="pickup-card-head">
+          <span class="pickup-title">${escapeHtml(p.name)}</span>
+          <span class="pickup-bill-total">${fmt(p.total)}</span>
+        </div>
+        <div class="pickup-meta">
+          <span class="${ageClass}">${ageText}</span> · ${dt.toLocaleDateString('th-TH')} ${dt.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})} · จ่ายเงินครบแล้ว
+        </div>
+        <div class="pickup-items">
+          ${totalCount} ชิ้น · ${itemsSummary}
+        </div>
+        ${p.note ? `<div class="pickup-note">${escapeHtml(p.note)}</div>` : ''}
+        <div class="pickup-actions">
+          <button class="pickup-action deliver" data-deliver="${p.id}">✓ ส่งของแล้ว</button>
+          <button class="pickup-action del" data-pickup-del="${p.id}">ลบ</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function openPickupModal() {
+    if (currentItems.length === 0) { toast('! ยังไม่มีรายการ'); return; }
+    const t = total();
+    const totalCount = itemCount();
+    $('pickupModalSub').textContent = `บิล ${fmt(t)} · ${totalCount} ชิ้น`;
+    $('pickupNameInput').value = '';
+    $('pickupNoteInput').value = '';
+    $('pickupModal').classList.add('show');
+    setTimeout(() => $('pickupNameInput').focus(), 50);
+  }
+
+  function closePickupModal() {
+    $('pickupModal').classList.remove('show');
+  }
+
+  function savePickup() {
+    const name = $('pickupNameInput').value.trim();
+    const note = $('pickupNoteInput').value.trim();
+    const t = total();
+
+    if (!name) { toast('! ใส่ชื่อ/ป้ายเตือน'); return; }
+
+    // บันทึกเป็นบิลใน history (ลูกค้าจ่ายเงินมาแล้ว)
+    const bill = {
+      time: new Date().toISOString(),
+      items: [...currentItems],
+      total: t,
+      paid: t,
+      pickupName: name
+    };
+    history.push(bill);
+    pruneOldHistory();
+    saveHistory();
+
+    // บันทึกของรอรับ
+    const pickup = {
+      id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      name: name,
+      note: note,
+      items: [...currentItems],
+      total: t,
+      time: new Date().toISOString()
+    };
+    pickups.push(pickup);
+    savePickups();
+
+    closePickupModal();
+    resetBill();
+    renderPickups();
+    renderHistory();
+    showPersistentNotification();
+    toast(`✓ บันทึก: ค้างของไว้ให้ ${name}`, 2200);
+  }
+
+  function deliverPickup(id) {
+    const idx = pickups.findIndex(p => p.id === id);
+    if (idx === -1) return;
+    const p = pickups[idx];
+    if (!confirm(`ส่งของให้ ${p.name} แล้ว?`)) return;
+    pickups.splice(idx, 1);
+    savePickups();
+    renderPickups();
+    showPersistentNotification();
+    toast(`✓ ส่งของให้ ${p.name} แล้ว`);
+  }
+
+  function deletePickup(id) {
+    const idx = pickups.findIndex(p => p.id === id);
+    if (idx === -1) return;
+    const p = pickups[idx];
+    if (!confirm(`ลบรายการของรอรับ ${p.name}? \n* การลบนี้ไม่กระทบยอดขาย`)) return;
+    pickups.splice(idx, 1);
+    savePickups();
+    renderPickups();
+    showPersistentNotification();
+    toast('✓ ลบแล้ว');
+  }
+
+  // ========== NOTIFICATION (แจ้งเตือนค้างไว้บนมือถือ) ==========
+  let notificationPermission = null;
+
+  async function ensureNotificationPermission() {
+    if (!('Notification' in window)) return false;
+    if (Notification.permission === 'granted') {
+      notificationPermission = 'granted';
+      return true;
+    }
+    if (Notification.permission === 'denied') {
+      notificationPermission = 'denied';
+      return false;
+    }
+    try {
+      const perm = await Notification.requestPermission();
+      notificationPermission = perm;
+      return perm === 'granted';
+    } catch (e) {
+      return false;
+    }
+  }
+
+  async function showPersistentNotification() {
+    if (!('Notification' in window)) return;
+    if (Notification.permission !== 'granted') return;
+
+    // ใช้ service worker ถ้ามี เพื่อให้ค้างไว้ได้นานขึ้น
+    try {
+      if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+        const reg = await navigator.serviceWorker.ready.catch(() => null);
+        if (reg && reg.showNotification) {
+          // ปิด notification เดิมก่อน
+          const existing = await reg.getNotifications({ tag: 'pickup-reminder' });
+          existing.forEach(n => n.close());
+
+          if (pickups.length === 0) return;
+
+          const title = pickups.length === 1
+            ? `มีของค้างให้ ${pickups[0].name}`
+            : `มีของค้าง ${pickups.length} ราย`;
+          const names = pickups.slice(0, 3).map(p => p.name).join(', ');
+          const body = pickups.length > 3 ? `${names}... และอีก ${pickups.length - 3} ราย` : names;
+
+          await reg.showNotification(title, {
+            body: body,
+            tag: 'pickup-reminder',
+            requireInteraction: true,  // ค้างไว้ จนกว่าจะกด
+            silent: true,
+            renotify: false
+          });
+          return;
+        }
+      }
+    } catch (e) { /* fallback ด้านล่าง */ }
+
+    // fallback: notification ธรรมดา (อาจหายเมื่อปิดแอป)
+    if (pickups.length === 0) {
+      if (window._pickupNotif) { try { window._pickupNotif.close(); } catch(e){} window._pickupNotif = null; }
+      return;
+    }
+    try {
+      if (window._pickupNotif) { try { window._pickupNotif.close(); } catch(e){} }
+      const title = pickups.length === 1
+        ? `มีของค้างให้ ${pickups[0].name}`
+        : `มีของค้าง ${pickups.length} ราย`;
+      const names = pickups.slice(0, 3).map(p => p.name).join(', ');
+      const body = pickups.length > 3 ? `${names}...` : names;
+      window._pickupNotif = new Notification(title, {
+        body: body,
+        tag: 'pickup-reminder',
+        requireInteraction: true,
+        silent: true
+      });
+    } catch (e) {}
+  }
+
+  function switchToPickupTab() {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    document.querySelector('[data-tab="pickups"]').classList.add('active');
+    $('registerView').style.display = 'none';
+    $('historyView').classList.remove('active');
+    $('debtView').classList.remove('active');
+    $('pickupView').classList.add('active');
+    renderPickups();
   }
 
   // ========== KEYPAD LOGIC ==========
@@ -2009,6 +2489,31 @@
   });
   $('holdBillBtn').addEventListener('click', holdBill);
   $('debtBillBtn').addEventListener('click', openDebtModal);
+  $('pickupBillBtn').addEventListener('click', async () => {
+    if (currentItems.length === 0) { toast('! ยังไม่มีรายการ'); return; }
+    // ขอ permission แค่ครั้งแรก
+    await ensureNotificationPermission();
+    openPickupModal();
+  });
+
+  // pickup modal actions
+  $('pickupModal').addEventListener('click', e => {
+    const action = e.target.dataset?.pickupAction;
+    if (action === 'cancel') closePickupModal();
+    else if (action === 'ok') savePickup();
+    else if (e.target.id === 'pickupModal') closePickupModal();
+  });
+
+  // pickup list actions
+  $('pickupList').addEventListener('click', e => {
+    const deliverId = e.target.dataset?.deliver;
+    const delId = e.target.dataset?.pickupDel;
+    if (deliverId) deliverPickup(deliverId);
+    else if (delId) deletePickup(delId);
+  });
+
+  // คลิกแถบเตือน → ไป tab รอรับ
+  $('pickupAlert').addEventListener('click', switchToPickupTab);
 
   // sync 2 ช่องในโมดัล
   $('debtPaidInput').addEventListener('input', onDebtPaidChange);
@@ -2074,8 +2579,10 @@
       $('registerView').style.display = tab === 'register' ? 'flex' : 'none';
       $('historyView').classList.toggle('active', tab === 'history');
       $('debtView').classList.toggle('active', tab === 'debts');
+      $('pickupView').classList.toggle('active', tab === 'pickups');
       if (tab === 'history') renderHistory();
       if (tab === 'debts') renderDebts();
+      if (tab === 'pickups') renderPickups();
     });
   });
 
@@ -2088,17 +2595,49 @@
   });
 
   // ========== INIT ==========
+  // register service worker (สำหรับ persistent notification)
+  // ใช้ inline blob เพื่อไม่ต้องสร้างไฟล์แยก
+  if ('serviceWorker' in navigator) {
+    try {
+      const swCode = `
+        self.addEventListener('install', e => self.skipWaiting());
+        self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+        self.addEventListener('notificationclick', e => {
+          e.notification.close();
+          e.waitUntil(
+            self.clients.matchAll({ type: 'window' }).then(list => {
+              for (const c of list) {
+                if ('focus' in c) return c.focus();
+              }
+              if (self.clients.openWindow) return self.clients.openWindow('/');
+            })
+          );
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'text/javascript' });
+      const url = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(url).catch(() => {});
+    } catch (e) {}
+  }
+
   (async () => {
     await loadHistory();
     await loadQuick();
     loadCurrent();
     loadParked();
     loadDebts();
+    loadPickups();
     renderQuick();
     renderReceipt();
     renderHistory();
     renderParked();
     renderDebts();
+    renderPickups();
+    // ถ้ามีของค้างอยู่ตอนเปิดแอป → โชว์ notification ค้างไว้
+    if (pickups.length > 0 && 'Notification' in window && Notification.permission === 'granted') {
+      // รอ service worker พร้อมก่อน
+      setTimeout(() => showPersistentNotification(), 1000);
+    }
   })();
 </script>
 </body>
