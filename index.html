@@ -864,6 +864,175 @@
     border-color: var(--text);
   }
   .modal-btn.ok:active { background: var(--text-soft); }
+
+  /* ===== DEBT BUTTON ===== */
+  .debt-btn {
+    padding: 13px 14px;
+    background: transparent;
+    color: var(--pink);
+    border: 1px solid var(--pink);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .debt-btn:active {
+    background: var(--pink);
+    color: #000;
+    transform: scale(0.97);
+  }
+  .debt-btn:disabled {
+    color: var(--text-faint);
+    border-color: var(--line);
+    cursor: not-allowed;
+  }
+
+  /* ===== TAB BADGE ===== */
+  .tab { position: relative; }
+  .tab-badge {
+    display: inline-block;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    margin-left: 5px;
+    background: var(--pink);
+    color: #000;
+    border-radius: 9px;
+    font-size: 10px;
+    font-weight: 700;
+    line-height: 18px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .tab.active .tab-badge { background: #000; color: var(--pink); }
+
+  /* ===== DEBT LIST ===== */
+  .debt-view {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+    display: none;
+  }
+  .debt-view.active { display: block; }
+  .debt-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--pink);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .debt-summary-total {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--pink);
+  }
+  .debt-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-faint);
+  }
+  .debt-card {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--pink);
+    padding: 12px 14px;
+    margin-bottom: 8px;
+    background: var(--bg-card);
+    border-radius: 10px;
+    animation: fadeIn 0.25s ease-out;
+  }
+  .debt-card-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 6px;
+  }
+  .debt-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.2px;
+  }
+  .debt-amount {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--pink);
+  }
+  .debt-meta {
+    font-size: 11px;
+    color: var(--text-faint);
+    margin-bottom: 10px;
+    letter-spacing: 0.3px;
+  }
+  .debt-age-warn { color: var(--amber); }
+  .debt-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .debt-action {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    color: var(--text-soft);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .debt-action.collect {
+    border-color: var(--green);
+    color: var(--green);
+  }
+  .debt-action.collect:active {
+    background: var(--green);
+    color: #000;
+    transform: scale(0.97);
+  }
+  .debt-action.del {
+    border-color: var(--red);
+    color: var(--red);
+    flex: 0 0 auto;
+    padding: 10px 14px;
+  }
+  .debt-action.del:active {
+    background: var(--red);
+    color: #000;
+    transform: scale(0.97);
+  }
+
+  /* ===== DEBT INPUT MODAL ===== */
+  .modal-input {
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--bg-elevated);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 15px;
+    margin-bottom: 10px;
+    outline: none;
+  }
+  .modal-input:focus { border-color: var(--pink); }
+  .modal-label {
+    display: block;
+    font-size: 11px;
+    color: var(--text-faint);
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    margin-top: 4px;
+  }
 </style>
 </head>
 <body>
@@ -876,6 +1045,7 @@
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="register">คิดเงิน</button>
+      <button class="tab" data-tab="debts">ลูกหนี้<span class="tab-badge" id="debtBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="history">ประวัติ</button>
     </div>
   </header>
@@ -926,6 +1096,7 @@
       <div class="action-row">
         <button class="clear-btn" id="clearBillBtn">เคลียร์บิล</button>
         <button class="hold-btn" id="holdBillBtn">พักบิล</button>
+        <button class="debt-btn" id="debtBillBtn">ค้างไว้</button>
         <button class="exact-btn" id="exactBtn">จ่ายพอดี · จบบิล</button>
       </div>
     </div>
@@ -957,6 +1128,16 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ============ DEBTS ============ -->
+  <div class="debt-view" id="debtView">
+    <div class="debt-summary" id="debtSummary" style="display:none">
+      <span>ค้างทั้งหมด <strong id="debtCount">0</strong> ราย</span>
+      <span class="debt-summary-total" id="debtSumTotal">฿0</span>
+    </div>
+    <div class="history-note">// แตะ "เก็บเงินแล้ว" เมื่อลูกค้ามาจ่าย</div>
+    <div id="debtList"></div>
   </div>
 
   <!-- ============ HISTORY ============ -->
@@ -1001,6 +1182,25 @@
   </div>
 </div>
 
+<!-- Modal บันทึกลูกหนี้ -->
+<div class="modal" id="debtModal">
+  <div class="modal-card">
+    <div class="modal-title">บันทึกลูกหนี้</div>
+    <div class="modal-sub" id="debtModalSub">ค้างจ่าย</div>
+
+    <label class="modal-label">ชื่อลูกหนี้ / โน้ต</label>
+    <input type="text" class="modal-input" id="debtNameInput" placeholder="เช่น พี่นก, โต๊ะ 3" maxlength="40" autocomplete="off">
+
+    <label class="modal-label">ยอดค้าง (บาท)</label>
+    <input type="number" class="modal-input" id="debtAmountInput" inputmode="decimal" step="0.01" min="0">
+
+    <div class="modal-actions">
+      <button class="modal-btn cancel" data-debt-action="cancel">ยกเลิก</button>
+      <button class="modal-btn ok" data-debt-action="ok">บันทึกหนี้</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ========== STATE ==========
   let currentItems = [];     // [{price, qty}]
@@ -1011,10 +1211,12 @@
   let paidValue = null;
   let quickValues = [20, 50, 100, 500, 1000];  // ปุ่มลัด แก้ได้
   let parkedBills = [];      // [{id, name, items, time}]
+  let debts = [];            // [{id, name, items, total, time}]
   const STORAGE_KEY = 'pos:bills';
   const QUICK_KEY = 'pos:quick';
   const CURRENT_KEY = 'pos:current';
   const PARKED_KEY = 'pos:parked';
+  const DEBT_KEY = 'pos:debts';
 
   // ========== HELPERS ==========
   const $ = id => document.getElementById(id);
@@ -1104,6 +1306,17 @@
       localStorage.setItem(PARKED_KEY, JSON.stringify(parkedBills));
     } catch (e) { console.error('save parked failed', e); }
   }
+  function loadDebts() {
+    try {
+      const raw = localStorage.getItem(DEBT_KEY);
+      debts = raw ? JSON.parse(raw) : [];
+    } catch (e) { debts = []; }
+  }
+  function saveDebts() {
+    try {
+      localStorage.setItem(DEBT_KEY, JSON.stringify(debts));
+    } catch (e) { console.error('save debts failed', e); }
+  }
 
   // ========== RENDER ==========
   let lastTotal = 0;
@@ -1150,6 +1363,7 @@
     $('exactBtn').disabled = currentItems.length === 0;
     $('clearBillBtn').disabled = currentItems.length === 0;
     $('holdBillBtn').disabled = currentItems.length === 0;
+    $('debtBillBtn').disabled = currentItems.length === 0;
 
     // payment area
     if (mode === 'pay' && paidValue !== null) {
@@ -1203,7 +1417,7 @@
           s + (typeof it === 'number' ? 1 : it.qty), 0);
         card.innerHTML = `
           <div class="bill-head">
-            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}</span>
+            <span>${d.toLocaleDateString('th-TH')} ${d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}${b.debtName ? ` · <span style="color:var(--pink)">เก็บหนี้ ${escapeHtml(b.debtName)}</span>` : ''}</span>
             <span class="bill-total">${fmt(b.total)}</span>
           </div>
           <div class="bill-meta">
@@ -1219,6 +1433,140 @@
     const todays = history.filter(b => localDateKey(b.time) === today);
     $('todayCount').textContent = todays.length;
     $('todaySum').textContent = fmt(todays.reduce((s,b)=>s+b.total, 0));
+  }
+
+  // ========== DEBTS ==========
+  function dayDiff(iso) {
+    const ms = Date.now() - new Date(iso).getTime();
+    return Math.floor(ms / (24 * 60 * 60 * 1000));
+  }
+
+  function renderDebts() {
+    // badge บน tab
+    const badge = $('debtBadge');
+    if (debts.length > 0) {
+      badge.style.display = 'inline-block';
+      badge.textContent = debts.length;
+    } else {
+      badge.style.display = 'none';
+    }
+
+    const list = $('debtList');
+    const summary = $('debtSummary');
+    list.innerHTML = '';
+
+    if (debts.length === 0) {
+      summary.style.display = 'none';
+      list.innerHTML = '<div class="debt-empty"><div style="font-size:14px;color:var(--pink);margin-bottom:8px">// ลูกหนี้</div>ยังไม่มีรายการค้างจ่าย</div>';
+      return;
+    }
+
+    const totalDebt = debts.reduce((s, d) => s + d.total, 0);
+    summary.style.display = 'flex';
+    $('debtCount').textContent = debts.length;
+    $('debtSumTotal').textContent = fmt(totalDebt);
+
+    // newest first
+    [...debts].reverse().forEach(d => {
+      const days = dayDiff(d.time);
+      const dt = new Date(d.time);
+      const ageText = days === 0 ? 'วันนี้' : days === 1 ? 'เมื่อวาน' : `${days} วันแล้ว`;
+      const ageClass = days >= 3 ? 'debt-age-warn' : '';
+      const card = document.createElement('div');
+      card.className = 'debt-card';
+      card.innerHTML = `
+        <div class="debt-card-head">
+          <span class="debt-name">${escapeHtml(d.name)}</span>
+          <span class="debt-amount">${fmt(d.total)}</span>
+        </div>
+        <div class="debt-meta">
+          <span class="${ageClass}">${ageText}</span> · ${dt.toLocaleDateString('th-TH')} ${dt.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}
+        </div>
+        <div class="debt-actions">
+          <button class="debt-action collect" data-collect="${d.id}">เก็บเงินแล้ว</button>
+          <button class="debt-action del" data-debt-del="${d.id}">ลบ</button>
+        </div>
+      `;
+      list.appendChild(card);
+    });
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, c => ({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[c]));
+  }
+
+  function openDebtModal() {
+    if (currentItems.length === 0) { toast('! ยังไม่มีรายการ'); return; }
+    const t = total();
+    $('debtModalSub').textContent = `บิลรวม ${fmt(t)}`;
+    $('debtNameInput').value = '';
+    $('debtAmountInput').value = t.toFixed(2).replace(/\.00$/, '');
+    $('debtModal').classList.add('show');
+    setTimeout(() => $('debtNameInput').focus(), 50);
+  }
+
+  function closeDebtModal() {
+    $('debtModal').classList.remove('show');
+  }
+
+  function saveDebt() {
+    const name = $('debtNameInput').value.trim();
+    const amount = parseFloat($('debtAmountInput').value);
+    if (!name) { toast('! ใส่ชื่อลูกหนี้'); return; }
+    if (!amount || amount <= 0) { toast('! ใส่ยอดค้าง'); return; }
+
+    const debt = {
+      id: Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+      name: name,
+      items: [...currentItems],
+      total: amount,
+      billTotal: total(),
+      time: new Date().toISOString()
+    };
+    debts.push(debt);
+    saveDebts();
+    closeDebtModal();
+    resetBill();
+    renderDebts();
+    toast(`✓ บันทึกหนี้ ${name} ${fmt(amount)}`);
+  }
+
+  function collectDebt(id) {
+    const idx = debts.findIndex(d => d.id === id);
+    if (idx === -1) return;
+    const d = debts[idx];
+    if (!confirm(`เก็บเงิน ${d.name} จำนวน ${fmt(d.total)}?`)) return;
+
+    // บันทึกเข้าประวัติ — เป็นบิลที่จ่ายพอดี
+    const bill = {
+      time: new Date().toISOString(),
+      items: [{ price: d.total, qty: 1 }],
+      total: d.total,
+      paid: d.total,
+      debtName: d.name
+    };
+    history.push(bill);
+    pruneOldHistory();
+    saveHistory();
+
+    debts.splice(idx, 1);
+    saveDebts();
+    renderDebts();
+    renderHistory();
+    toast(`✓ เก็บเงิน ${d.name} แล้ว`);
+  }
+
+  function deleteDebt(id) {
+    const idx = debts.findIndex(d => d.id === id);
+    if (idx === -1) return;
+    const d = debts[idx];
+    if (!confirm(`ลบลูกหนี้ ${d.name} (${fmt(d.total)})? \n* การลบนี้จะไม่บันทึกเป็นเงินที่ได้รับ`)) return;
+    debts.splice(idx, 1);
+    saveDebts();
+    renderDebts();
+    toast('✓ ลบแล้ว');
   }
 
   // ========== KEYPAD LOGIC ==========
@@ -1567,6 +1915,24 @@
     toast('✓ ล้างบิลแล้ว');
   });
   $('holdBillBtn').addEventListener('click', holdBill);
+  $('debtBillBtn').addEventListener('click', openDebtModal);
+
+  // debt modal actions
+  $('debtModal').addEventListener('click', e => {
+    const action = e.target.dataset?.debtAction;
+    if (action === 'cancel') closeDebtModal();
+    else if (action === 'ok') saveDebt();
+    // คลิกบน backdrop (ตัว modal เอง ไม่ใช่ลูก) = ปิด
+    else if (e.target.id === 'debtModal') closeDebtModal();
+  });
+
+  // debt list actions
+  $('debtList').addEventListener('click', e => {
+    const collectId = e.target.dataset?.collect;
+    const delId = e.target.dataset?.debtDel;
+    if (collectId) collectDebt(collectId);
+    else if (delId) deleteDebt(delId);
+  });
 
   // parked bar: คลิก chip = เรียกคืน, คลิก × = ลบ
   $('parkedBar').addEventListener('click', e => {
@@ -1607,10 +1973,12 @@
     t.addEventListener('click', () => {
       document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
       t.classList.add('active');
-      const isHist = t.dataset.tab === 'history';
-      $('registerView').style.display = isHist ? 'none' : 'flex';
-      $('historyView').classList.toggle('active', isHist);
-      if (isHist) renderHistory();
+      const tab = t.dataset.tab;
+      $('registerView').style.display = tab === 'register' ? 'flex' : 'none';
+      $('historyView').classList.toggle('active', tab === 'history');
+      $('debtView').classList.toggle('active', tab === 'debts');
+      if (tab === 'history') renderHistory();
+      if (tab === 'debts') renderDebts();
     });
   });
 
@@ -1628,10 +1996,12 @@
     await loadQuick();
     loadCurrent();
     loadParked();
+    loadDebts();
     renderQuick();
     renderReceipt();
     renderHistory();
     renderParked();
+    renderDebts();
   })();
 </script>
 </body>
