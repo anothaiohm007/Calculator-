@@ -160,20 +160,17 @@
 
   /* ===== RECEIPT ===== */
   .receipt {
-    flex: 1;
-    overflow-y: auto;
-    padding: 12px 18px;
-    -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth;
-    min-height: 60px;
+    flex: 0 0 auto;
+    overflow: hidden;
+    padding: 4px 18px 0;
   }
   .receipt-header {
     text-align: center;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-faint);
     letter-spacing: 2px;
-    margin-bottom: 10px;
-    padding-bottom: 8px;
+    margin-bottom: 4px;
+    padding-bottom: 4px;
     border-bottom: 1px dashed var(--line);
   }
   .item {
@@ -269,7 +266,7 @@
 
   /* ===== TOTALS ===== */
   .totals {
-    padding: 12px 18px 14px;
+    padding: 8px 18px 10px;
     background: var(--bg-soft);
     border-top: 1px solid var(--line);
   }
@@ -277,16 +274,16 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: 14px;
+    font-size: 13px;
     color: var(--text-soft);
-    margin-bottom: 4px;
+    margin-bottom: 2px;
     letter-spacing: 0.3px;
   }
   .total-grand {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--text);
-    margin-top: 6px;
+    margin-top: 2px;
     transition: transform 0.2s, color 0.3s;
   }
   .total-grand.bump {
@@ -345,7 +342,7 @@
   .exact-btn {
     width: 100%;
     margin-top: 0;
-    padding: 14px;
+    padding: 10px;
     background: linear-gradient(135deg, var(--green), #a7f3d0);
     color: #064e3b;
     border: none;
@@ -364,17 +361,17 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
-    margin-top: 10px;
+    margin-top: 6px;
   }
   .action-row-primary {
-    margin-top: 6px;
+    margin-top: 4px;
   }
   .clear-btn,
   .hold-btn,
   .debt-btn,
   .pickup-btn {
     width: 100%;
-    padding: 11px 4px;
+    padding: 8px 4px;
     background: transparent;
     border-radius: 9px;
     font-family: inherit;
@@ -487,22 +484,22 @@
 
   /* ===== KEYPAD ===== */
   .keypad {
-    padding: 10px 14px 14px;
+    padding: 6px 14px 10px;
     background: var(--bg);
     border-top: 1px solid var(--line);
   }
   .display-top {
     background: var(--bg-card);
     color: var(--text);
-    margin: 6px 0 10px;
-    padding: 16px 20px;
+    margin: 4px 0 8px;
+    padding: 10px 16px;
     border: 1px solid var(--line);
-    border-radius: 12px;
+    border-radius: 10px;
     font-family: inherit;
-    font-size: 42px;
+    font-size: 32px;
     font-weight: 700;
     text-align: right;
-    min-height: 72px;
+    min-height: 54px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -567,16 +564,16 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
-    margin-bottom: 6px;
+    margin-bottom: 4px;
   }
   .quick {
     background: var(--bg-card);
     border: 1px solid var(--line);
     color: var(--text);
-    padding: 10px 4px;
+    padding: 6px 4px;
     border-radius: 8px;
     font-family: inherit;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
@@ -588,9 +585,9 @@
   }
   .quick-hint {
     text-align: center;
-    font-size: 11px;
+    font-size: 10px;
     color: var(--text-faint);
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     letter-spacing: 0.3px;
   }
 
@@ -603,10 +600,10 @@
     background: var(--bg-card);
     border: 1px solid var(--line);
     color: var(--text);
-    padding: 14px 0;
+    padding: 8px 0;
     border-radius: 10px;
     font-family: inherit;
-    font-size: 22px;
+    font-size: 19px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.12s;
@@ -1038,9 +1035,17 @@
     50% { box-shadow: 0 0 0 6px transparent; }
   }
   .pickup-alert {
-    display: none !important;
+    display: none;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: linear-gradient(90deg, rgba(147,197,253,0.15), rgba(147,197,253,0.05));
+    border-bottom: 1px solid var(--blue);
+    border-top: 1px solid var(--line);
+    cursor: pointer;
+    animation: pickupPulse 2.5s ease-in-out infinite;
   }
-  .pickup-alert.active { display: none !important; }
+  .pickup-alert.active { display: flex; }
   .pickup-alert-icon {
     width: 32px;
     height: 32px;
@@ -1088,6 +1093,84 @@
 
   .tab-badge.blue { background: var(--blue); }
   .tab.active .tab-badge.blue { background: #000; color: var(--blue); }
+
+  .tab-badge.green { background: var(--green); color: #000; }
+  .tab.active .tab-badge.green { background: #000; color: var(--green); }
+
+  /* ===== BILL INLINE SUMMARY (หน้าหลัก) ===== */
+  .bill-inline {
+    padding: 8px 12px;
+    background: var(--bg-card);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    margin: 2px 0;
+    color: var(--text);
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+    position: relative;
+  }
+  .bill-inline-scroll {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    word-break: break-word;
+    max-height: 56px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .bill-inline:active {
+    background: var(--bg-elevated);
+    border-color: var(--green);
+  }
+  .bill-inline-hint {
+    display: block;
+    font-size: 10px;
+    color: var(--text-faint);
+    margin-top: 3px;
+    letter-spacing: 1px;
+    font-family: inherit;
+    font-weight: 500;
+  }
+  .bill-inline-num {
+    color: var(--text);
+  }
+  .bill-inline-op {
+    color: var(--text-faint);
+    margin: 0 4px;
+  }
+
+  /* ===== BILL VIEW (แถบบิลเต็ม) ===== */
+  .bill-view {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 18px;
+    display: none;
+  }
+  .bill-view.active { display: block; }
+  .bill-summary {
+    background: var(--bg-card);
+    border: 1px solid var(--green);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+  }
+  .bill-summary-total {
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .bill-empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--text-faint);
+    font-size: 13px;
+    line-height: 1.7;
+  }
 
   .pickup-view {
     flex: 1;
@@ -1244,6 +1327,7 @@
     </div>
     <div class="tabs">
       <button class="tab active" data-tab="register">คิดเงิน</button>
+      <button class="tab" data-tab="bill">บิล<span class="tab-badge green" id="billBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="pickups">รอรับ<span class="tab-badge blue" id="pickupBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="debts">ลูกหนี้<span class="tab-badge" id="debtBadge" style="display:none">0</span></button>
       <button class="tab" data-tab="history">ประวัติ</button>
@@ -1269,7 +1353,7 @@
 
     <div class="receipt" id="receipt">
       <div class="receipt-header" id="receiptDate">บิลใหม่</div>
-      <div id="itemList"></div>
+      <div class="bill-inline" id="billInline" style="display:none"></div>
       <div class="empty" id="emptyMsg">
         <div class="empty-icon"></div>
         <span style="color:var(--green)">[ ] ยังไม่มีรายการ</span><br>
@@ -1341,6 +1425,20 @@
       </div>
     </div>
 
+  </div>
+
+  <!-- ============ BILL (รายการบิลเต็ม) ============ -->
+  <div class="bill-view" id="billView">
+    <div class="bill-summary" id="billSummary">
+      <span>รายการ <strong id="billCount">0</strong> ชิ้น</span>
+      <span class="bill-summary-total" id="billSumTotal">฿0</span>
+    </div>
+    <div class="history-note">// แตะ +/− เพื่อแก้จำนวน · × เพื่อลบ</div>
+    <div id="itemList"></div>
+    <div class="bill-empty" id="billEmpty">
+      <div style="font-size:14px;color:var(--green);margin-bottom:8px">// ยังไม่มีรายการ</div>
+      กลับไปแถบ "คิดเงิน" เพื่อเพิ่มราคา
+    </div>
   </div>
 
   <!-- ============ PICKUPS (ของรอรับ) ============ -->
@@ -1588,14 +1686,33 @@
   function renderReceipt() {
     const list = $('itemList');
     const empty = $('emptyMsg');
+    const inline = $('billInline');
+    const billEmpty = $('billEmpty');
+    const billBadge = $('billBadge');
     list.innerHTML = '';
+
     if (currentItems.length === 0) {
       empty.style.display = 'block';
+      inline.style.display = 'none';
+      if (billEmpty) billEmpty.style.display = 'block';
+      if (billBadge) billBadge.style.display = 'none';
       $('receiptDate').textContent = 'บิลใหม่';
     } else {
       empty.style.display = 'none';
+      inline.style.display = 'block';
+      if (billEmpty) billEmpty.style.display = 'none';
       const now = new Date();
       $('receiptDate').textContent = `กำลังคิด · ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;
+
+      // ===== inline summary (หน้าหลัก) — เรียงล่าสุดก่อน =====
+      const parts = [...currentItems].reverse().map(it => {
+        const base = `<span class="bill-inline-num">${fmt(it.price)}</span>`;
+        return it.qty > 1 ? `${base}<span class="bill-inline-op">×${it.qty}</span>` : base;
+      });
+      inline.innerHTML = `<div class="bill-inline-scroll">${parts.join('<span class="bill-inline-op"> + </span>')}</div>`
+        + `<div class="bill-inline-hint">// แตะเพื่อดูบิลเต็ม · ${currentItems.length} รายการ</div>`;
+
+      // ===== full list (แถบบิล) =====
       currentItems.forEach((it, i) => {
         const row = document.createElement('div');
         row.className = 'item';
@@ -1613,6 +1730,17 @@
         `;
         list.appendChild(row);
       });
+
+      // ===== badge บน tab "บิล" =====
+      if (billBadge) {
+        billBadge.textContent = itemCount();
+        billBadge.style.display = 'inline-block';
+      }
+      // ===== ตัวเลขในแถบบิล =====
+      const billCountEl = $('billCount');
+      const billSumEl = $('billSumTotal');
+      if (billCountEl) billCountEl.textContent = itemCount();
+      if (billSumEl) billSumEl.textContent = fmt(total());
     }
     $('itemCount').textContent = itemCount();
     const newTotal = total();
@@ -2143,6 +2271,8 @@
     document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
     document.querySelector('[data-tab="pickups"]').classList.add('active');
     $('registerView').style.display = 'none';
+    const billViewEl = $('billView');
+    if (billViewEl) billViewEl.classList.remove('active');
     $('historyView').classList.remove('active');
     $('debtView').classList.remove('active');
     $('pickupView').classList.add('active');
@@ -2584,6 +2714,8 @@
       t.classList.add('active');
       const tab = t.dataset.tab;
       $('registerView').style.display = tab === 'register' ? 'flex' : 'none';
+      const billViewEl = $('billView');
+      if (billViewEl) billViewEl.classList.toggle('active', tab === 'bill');
       $('historyView').classList.toggle('active', tab === 'history');
       $('debtView').classList.toggle('active', tab === 'debts');
       $('pickupView').classList.toggle('active', tab === 'pickups');
@@ -2592,6 +2724,15 @@
       if (tab === 'pickups') renderPickups();
     });
   });
+
+  // กด inline summary → ไปแถบบิล
+  const billInlineEl = $('billInline');
+  if (billInlineEl) {
+    billInlineEl.addEventListener('click', () => {
+      const billTab = document.querySelector('.tab[data-tab="bill"]');
+      if (billTab) billTab.click();
+    });
+  }
 
   // clear history
   $('clearHistory').addEventListener('click', async () => {
