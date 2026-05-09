@@ -262,7 +262,7 @@
 
   /* ===== TOTALS ===== */
   .totals {
-    padding: 8px 18px 10px;
+    padding: 12px 18px 12px;
     background: var(--bg-soft);
     border-top: 1px solid var(--line);
   }
@@ -270,16 +270,16 @@
     display: flex;
     justify-content: space-between;
     align-items: baseline;
-    font-size: 13px;
+    font-size: 14px;
     color: var(--text-soft);
-    margin-bottom: 2px;
+    margin-bottom: 3px;
     letter-spacing: 0.3px;
   }
   .total-grand {
-    font-size: 26px;
+    font-size: 30px;
     font-weight: 700;
     color: var(--text);
-    margin-top: 2px;
+    margin-top: 4px;
     transition: transform 0.2s, color 0.3s;
   }
   .total-grand.bump {
@@ -338,7 +338,7 @@
   .exact-btn {
     width: 100%;
     margin-top: 0;
-    padding: 10px;
+    padding: 12px;
     background: linear-gradient(135deg, var(--green), #a7f3d0);
     color: #064e3b;
     border: none;
@@ -357,17 +357,17 @@
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 6px;
-    margin-top: 6px;
+    margin-top: 8px;
   }
   .action-row-primary {
-    margin-top: 4px;
+    margin-top: 6px;
   }
   .clear-btn,
   .hold-btn,
   .debt-btn,
   .pickup-btn {
     width: 100%;
-    padding: 8px 4px;
+    padding: 10px 4px;
     background: transparent;
     border-radius: 9px;
     font-family: inherit;
@@ -480,7 +480,7 @@
 
   /* ===== KEYPAD ===== */
   .keypad {
-    padding: 6px 14px 10px;
+    padding: 10px 14px 12px;
     background: var(--bg);
     border-top: 1px solid var(--line);
   }
@@ -488,14 +488,14 @@
     background: var(--bg-card);
     color: var(--text);
     margin: 4px 0 8px;
-    padding: 10px 16px;
+    padding: 14px 18px;
     border: 1px solid var(--line);
-    border-radius: 10px;
+    border-radius: 12px;
     font-family: inherit;
-    font-size: 32px;
+    font-size: 38px;
     font-weight: 700;
     text-align: right;
-    min-height: 54px;
+    min-height: 64px;
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -560,16 +560,16 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 5px;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
   }
   .quick {
     background: var(--bg-card);
     border: 1px solid var(--line);
     color: var(--text);
-    padding: 6px 4px;
+    padding: 9px 4px;
     border-radius: 8px;
     font-family: inherit;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.15s;
@@ -581,9 +581,9 @@
   }
   .quick-hint {
     text-align: center;
-    font-size: 10px;
+    font-size: 11px;
     color: var(--text-faint);
-    margin-bottom: 4px;
+    margin-bottom: 6px;
     letter-spacing: 0.3px;
   }
 
@@ -596,10 +596,10 @@
     background: var(--bg-card);
     border: 1px solid var(--line);
     color: var(--text);
-    padding: 8px 0;
+    padding: 12px 0;
     border-radius: 10px;
     font-family: inherit;
-    font-size: 19px;
+    font-size: 21px;
     font-weight: 600;
     cursor: pointer;
     transition: all 0.12s;
@@ -1095,7 +1095,7 @@
 
   /* ===== BILL INLINE SUMMARY (หน้าหลัก) ===== */
   .bill-inline {
-    padding: 8px 12px;
+    padding: 10px 12px;
     background: var(--bg-card);
     border: 1px solid var(--line);
     border-radius: 10px;
@@ -1107,14 +1107,64 @@
   }
   .bill-inline-scroll {
     font-family: 'JetBrains Mono', monospace;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.4;
-    word-break: break-word;
-    max-height: 56px;
-    overflow-y: auto;
+    font-size: 17px;
+    font-weight: 700;
+    white-space: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
+    padding: 6px 4px;
+    scrollbar-width: thin;
   }
+  .bill-inline-scroll::-webkit-scrollbar { height: 3px; }
+  .bill-inline-scroll::-webkit-scrollbar-thumb { background: var(--text-faint); border-radius: 2px; }
+  .bill-inline-num {
+    color: var(--text);
+    display: inline-block;
+  }
+  .bill-inline-num.latest {
+    color: var(--green);
+    background: rgba(134, 239, 172, 0.15);
+    padding: 3px 9px;
+    border-radius: 6px;
+    font-weight: 700;
+    outline: 1.5px solid var(--green);
+    animation: latestFade 0.4s ease-out;
+  }
+  @keyframes latestFade {
+    0% {
+      background: rgba(134, 239, 172, 0.55);
+      color: #fff;
+    }
+    100% {
+      background: rgba(134, 239, 172, 0.15);
+      color: var(--green);
+    }
+  }
+  .bill-inline-op {
+    color: var(--text-faint);
+    margin: 0 6px;
+    opacity: 0.6;
+  }
+
+  /* ===== DUPLICATE PRICE COLORS ===== */
+  /* inline summary: ขีดเส้นใต้สีตามกลุ่ม */
+  .bill-inline-num.dupe-1 { border-bottom: 2px solid #fca5a5; }
+  .bill-inline-num.dupe-2 { border-bottom: 2px solid #93c5fd; }
+  .bill-inline-num.dupe-3 { border-bottom: 2px solid #fcd34d; }
+  .bill-inline-num.dupe-4 { border-bottom: 2px solid #c4b5fd; }
+  .bill-inline-num.dupe-5 { border-bottom: 2px solid #f9a8d4; }
+  .bill-inline-num.dupe-6 { border-bottom: 2px solid #6ee7b7; }
+  /* ตัว latest มี border ทั้งกล่องอยู่แล้ว — เลย override underline ไม่ให้ทับ */
+  .bill-inline-num.latest { border-bottom: none !important; }
+
+  /* รายการในแถบ "บิล": แท่งสีซ้าย */
+  .item.dupe-1 { border-left: 3px solid #fca5a5; }
+  .item.dupe-2 { border-left: 3px solid #93c5fd; }
+  .item.dupe-3 { border-left: 3px solid #fcd34d; }
+  .item.dupe-4 { border-left: 3px solid #c4b5fd; }
+  .item.dupe-5 { border-left: 3px solid #f9a8d4; }
+  .item.dupe-6 { border-left: 3px solid #6ee7b7; }
   .bill-inline:active {
     background: var(--bg-elevated);
     border-color: var(--green);
@@ -1127,13 +1177,6 @@
     letter-spacing: 1px;
     font-family: inherit;
     font-weight: 500;
-  }
-  .bill-inline-num {
-    color: var(--text);
-  }
-  .bill-inline-op {
-    color: var(--text-faint);
-    margin: 0 4px;
   }
 
   /* ===== BILL VIEW (แถบบิลเต็ม) ===== */
@@ -1701,17 +1744,35 @@
       $('receiptDate').textContent = `กำลังคิด · ${now.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit'})}`;
 
       // ===== inline summary (หน้าหลัก) — เรียงล่าสุดก่อน =====
-      const parts = [...currentItems].reverse().map(it => {
-        const base = `<span class="bill-inline-num">${fmt(it.price)}</span>`;
+      const reversed = [...currentItems].reverse();
+
+      // หา price ที่ซ้ำ → จัดกลุ่มสี
+      const priceCounts = {};
+      currentItems.forEach(it => {
+        priceCounts[it.price] = (priceCounts[it.price] || 0) + 1;
+      });
+      const dupePrices = Object.keys(priceCounts).filter(p => priceCounts[p] > 1);
+      const dupeColorMap = {};
+      dupePrices.forEach((p, i) => { dupeColorMap[p] = (i % 6) + 1; });
+
+      const parts = reversed.map((it, idx) => {
+        const classes = ['bill-inline-num'];
+        if (idx === 0) classes.push('latest');
+        if (dupeColorMap[it.price]) classes.push(`dupe-${dupeColorMap[it.price]}`);
+        const base = `<span class="${classes.join(' ')}">${fmt(it.price)}</span>`;
         return it.qty > 1 ? `${base}<span class="bill-inline-op">×${it.qty}</span>` : base;
       });
       inline.innerHTML = `<div class="bill-inline-scroll">${parts.join('<span class="bill-inline-op"> + </span>')}</div>`
-        + `<div class="bill-inline-hint">// แตะเพื่อดูบิลเต็ม · ${currentItems.length} รายการ</div>`;
+        + `<div class="bill-inline-hint">// แตะเพื่อดูบิลเต็ม · ${currentItems.length} รายการ${dupePrices.length ? ' · มีเลขซ้ำ' : ''}</div>`;
+      // เลื่อนกลับซ้ายสุดเพื่อให้เห็นเลขล่าสุดเสมอ
+      const scrollEl = inline.querySelector('.bill-inline-scroll');
+      if (scrollEl) scrollEl.scrollLeft = 0;
 
       // ===== full list (แถบบิล) =====
       currentItems.forEach((it, i) => {
         const row = document.createElement('div');
-        row.className = 'item';
+        const dupeCls = dupeColorMap[it.price] ? ` dupe-${dupeColorMap[it.price]}` : '';
+        row.className = 'item' + dupeCls;
         row.innerHTML = `
           <span class="item-label">
             <span class="item-num">${String(i+1).padStart(2,'0')}</span>${fmt(it.price)}
